@@ -2,22 +2,22 @@ function [] = FreeSurf_stats2txt_HY()
 
 
 
-allFsLoc = 'Z:\BRAiN_Project\All_Raw_Freesurfer';
+allFsLoc = 'Z:\Yilma_Project\Case_Data';
 cd(allFsLoc);
 
 dirFolds = dir;
 dirFolds2 = {dirFolds.name};
-dirFoldsA = dirFolds2(3:end);
+dirFoldsA = dirFolds2(4:end);
 
 
 for di = 1:length(dirFoldsA)
    
     
-    tmpLoc = char(string(allFsLoc) + '\' + string(dirFoldsA{di}) + '\stats');
+    tmpLoc = char(string(allFsLoc) + '\' + string(dirFoldsA{di}) + '\Freesurfer\stats');
     
     cd(tmpLoc)
     
-    saveloc = 'Z:\BRAiN_Project\Freesurfer stat text files\FreesurfTEXTfiles'; 
+    saveloc = 'Z:\Yilma_Project\CompiledCSVdata\'; 
     
     copyfile('aseg.stats',     fullfile(saveloc, [dirFoldsA{di} , '_SC.txt']),'f')
     copyfile('wmparc.stats',   fullfile(saveloc, [dirFoldsA{di} , '_WM.txt']),'f')

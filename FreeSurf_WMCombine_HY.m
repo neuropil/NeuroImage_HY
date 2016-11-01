@@ -1,6 +1,6 @@
 function [] = FreeSurf_WMCombine_HY()
 
-txtLoc = 'Z:\BRAiN_Project\Freesurfer stat text files\FreesurfTEXTfiles';
+txtLoc = 'Z:\Yilma_Project\CompiledCSVdata\FS_TXT';
 cd(txtLoc)
 
 dirList = dir('*.txt');
@@ -22,7 +22,7 @@ for fi = 1:length(flist)
     
     nameParts = strsplit(flist{fi},{'_','.'});
     
-    analysisT = nameParts{2};
+    analysisT = nameParts{3};
 
     fid = fopen(flist{fi});
     tline = fgets(fid);
@@ -94,7 +94,7 @@ tlFnI = ~ismember(tltFn,{'CaseName','StructName'});
 totalLHTable = tableColFunction(totalLHTable, tlFnI);
 
 
-cd('Z:\BRAiN_Project\FinalSummaryNIfile')
+cd('Z:\Yilma_Project\CompiledCSVdata')
 
 
 % Subcortical Cortical
