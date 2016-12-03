@@ -15,9 +15,13 @@ for di = 1:length(dirFoldsA)
     
     tmpLoc = char(string(allFsLoc) + '\' + string(dirFoldsA{di}) + '\Freesurfer\stats');
     
+    if ~exist(tmpLoc , 'dir')
+        continue
+    end
+    
     cd(tmpLoc)
     
-    saveloc = 'Z:\Yilma_Project\CompiledCSVdata\'; 
+    saveloc = 'Z:\Yilma_Project\CompiledCSVdata\FS_TXT'; 
     
     copyfile('aseg.stats',     fullfile(saveloc, [dirFoldsA{di} , '_SC.txt']),'f')
     copyfile('wmparc.stats',   fullfile(saveloc, [dirFoldsA{di} , '_WM.txt']),'f')
