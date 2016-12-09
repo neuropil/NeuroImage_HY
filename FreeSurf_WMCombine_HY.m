@@ -38,7 +38,7 @@ for fi = 1:length(flist)
     allLines = allLines(allLind);
     iLines{fi} = allLines;
     casParts = strsplit(flist{fi},'_');
-    caseNum = casParts{1};
+    caseNum = casParts{2};
     
     switch analysisT
         case 'SC'

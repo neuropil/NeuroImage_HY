@@ -15,19 +15,30 @@ fdir4 = fdir3(cellfun(@(x) ~isempty(strfind(x,'Case')), fdir3, 'UniformOutput',t
 
 for i = 1:length(fdir4)
     
-    tmpD = [fmainLoc,'\',fdir4{i},'\NIFTI'];
+    tmpD = [fmainLoc,'\',fdir4{i},'\NIFTI\OB_Volume'];
     cd(tmpD);
     
+    fdir = dir('*.csv');
+    fdirNs = {fdir.name};
+    
+    if isempty(fdirNs)
+        continue
+    end
+    
     nameParts = strsplit(fdir4{i},'_');
-
+    
     newName = ['ob_volumes_c',nameParts{2},'.csv'];
     
-    newNloc = ['Z:\Yilma_Project\CompiledCSVdata\OV_CSV\',newName];   
+    newNloc = ['Z:\Yilma_Project\CompiledCSVdata\OV_CSV\',newName];
     
-    if ~exist([tmpD , '\ob_volumes.csv'],'file')
+    if ~exist([tmpD , '\ob_volumes.csv'],'file') && ~exist([tmpD , '\ob_volumesC.csv'],'file')
         continue
     else
-        copyfile([tmpD , '\ob_volumes.csv'],newNloc);
+        if strcmp(fdirNs,'ob_volumes.csv')
+            copyfile([tmpD , '\ob_volumes.csv'],newNloc);
+        else
+            copyfile([tmpD , '\ob_volumesC.csv'],newNloc);
+        end
     end
 end
 
