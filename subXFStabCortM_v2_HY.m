@@ -1,19 +1,39 @@
-function [allCaseD , allSTATS] = subXFStabCortM_v1_HY()
+function [allCaseD , allSTATS] = subXFStabCortM_v2_HY()
 
 
 cd('Z:\Yilma_Project\CompiledCSVdata')
 
 subTab = readtable('ob_subj_data.csv');
 
+condS = {'PD','ET'};
+for ci = 1:2
+    switch ci
+        case 1
+            [allCaseD.PD] = getDATA(3, subTab, condS{ci});
+            [allSTATS.PD] = getSTATS(allCaseD.PD, 3);
+        case 2
+            [allCaseD.ET] = getDATA(1, subTab, condS{ci});
+            [allSTATS.ET] = getSTATS(allCaseD.ET, 1);
+    end
+end
 
 
-allCaseD = cell(3,3);
+end
 
-for gi = 1:3
+
+
+function [dataOUT] = getDATA(groupNum, subTab, condI)
+
+condIn = ismember(subTab.cond,condI);
+subTabt = subTab(condIn,:);
+
+dataOUT = cell(3,groupNum);
+
+for gi = 1:groupNum
     
-    numCASES = sum(subTab.groupN == gi);
+    numCASES = sum(subTabt.groupN == gi);
     
-    caseINDS = find(subTab.groupN == gi);
+    caseINDS = find(subTabt.groupN == gi);
     
     % Thalamus Volume
     totalCM = nan(numCASES,1);
@@ -30,10 +50,10 @@ for gi = 1:3
     for si = 1:numCASES
         
         cI = caseINDS(si);
-        fsurgC = subTab.f_surg_n(cI);
-        ssurgC = subTab.s_surg_n(cI);
+        fsurgC = subTabt.f_surg_n(cI);
+        ssurgC = subTabt.s_surg_n(cI);
         
-        sideIND = subTab.f_surg_s{cI};
+        sideIND = subTabt.f_surg_s{cI};
         
         if strcmp(sideIND,'L')
             brainFlag = 'lhCorticalWhiteMatter,';
@@ -80,95 +100,9 @@ for gi = 1:3
     hemiCM = hemiCM(~isnan(hemiCM));
     tiv = tiv(~isnan(tiv));
     
-    allCaseD{1,gi} = totalCM;
-    allCaseD{2,gi} = hemiCM;
-    allCaseD{3,gi} = tiv;
-    
-end
-
-
-allSTATS = cell(1,3);
-
-for si = 1:3
-    
-    forSTATS.data = [];
-    forSTATS.group = [];
-    
-    for g2 = 1:3
-        
-        forSTATS.data = [forSTATS.data ; allCaseD{si,g2}];
-        
-        grTmp = repmat(g2 , length(allCaseD{si,g2}) , 1);
-        
-        forSTATS.group = [forSTATS.group ; grTmp];
-        
-    end
-    
-    allSTATS{1,si} = forSTATS;
-    
-end
-
-
-
-
-end
-
-
-
-function [dataOUT] = getDATA(groupNum, subTab, allTable, pUSE, condI)
-
-condIn = ismember(subTab.cond,condI);
-subTabt = subTab(condIn,:);
-
-dataOUT = cell(3,groupNum);
-
-for gi = 1:groupNum
-    
-    numCASES = sum(subTabt.groupN == gi);
-    
-    caseINDS = find(subTabt.groupN == gi);
-    
-    % TIV
-    absDif = nan(numCASES,1);
-    
-    % WM_MNI
-    signDir = nan(numCASES,1);
-    
-    % WM_NAT
-    relDif = nan(numCASES,1);
-    
-    ti = 1;
-    
-    for si = 1:numCASES
-        
-        cI = caseINDS(si);
-        fsurgC = subTabt.f_surg_n(cI);
-        ssurgC = subTabt.s_surg_n(cI);
-        
-        fsurgInd = ismember(allTable.CaseNum2,fsurgC);
-        ssurgInd = ismember(allTable.CaseNum2,ssurgC);
-        
-        if sum(fsurgInd) == 0 || sum(ssurgInd) == 0
-            continue
-        else
-
-            relDif(ti,1) = abs(double(allTable.(pUSE)(ssurgInd) - allTable.(pUSE)(fsurgInd))) / double(allTable.(pUSE)(fsurgInd));
-
-            absDif(ti,1) = double(allTable.(pUSE)(ssurgInd) - allTable.(pUSE)(fsurgInd)) / double(allTable.(pUSE)(fsurgInd));
-            
-            signDir(ti,1) = sign(absDif(ti,1));
-            
-            ti = ti + 1;
-        end
-    end
-    
-    relDif = relDif(~isnan(relDif));
-    absDif = absDif(~isnan(absDif));
-    signDir = signDir(~isnan(signDir));
-    
-    dataOUT{1,gi} = relDif;
-    dataOUT{2,gi} = absDif;
-    dataOUT{3,gi} = signDir;
+    dataOUT{1,gi} = totalCM;
+    dataOUT{2,gi} = hemiCM;
+    dataOUT{3,gi} = tiv;
     
 end
 
