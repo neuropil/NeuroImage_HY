@@ -1,20 +1,45 @@
-function [allCaseD , allSTATS] = subOBVOL_v1_HY(absFlag)
+function [allCaseD , allSTATS] = subOBVOL_v2_HY(absFlag)
 
 cd('Z:\Yilma_Project\CompiledCSVdata')
-
-subTab = readtable('ob_subj_data.csv');
 
 load('AllOBdata.mat');
 
 allOBTab.caseID = cellfun(@(x) str2double(x(2:4)), allOBTab.caseID); %#ok<NODEF>
 
-allCaseD = cell(2,3);
+cd('Z:\Yilma_Project\CompiledCSVdata')
 
-for gi = 1:3
+subTab = readtable('ob_subj_data.csv');
+
+condS = {'PD','ET'};
+for ci = 1:2
+    switch ci
+        case 1
+            [allCaseD.PD] = getDATA(3, subTab, allOBTab, absFlag, condS{ci});
+            [allSTATS.PD] = getSTATS(allCaseD.PD, 3);
+        case 2
+            [allCaseD.ET] = getDATA(1, subTab, allOBTab, absFlag, condS{ci});
+            [allSTATS.ET] = getSTATS(allCaseD.ET, 1);
+    end
+end
+
+
+
+
+end
+
+
+function [dataOUT] = getDATA(groupNum, subTab, allOBTab, absFlag, condI)
+
+condIn = ismember(subTab.cond,condI);
+subTabt = subTab(condIn,:);
+
+dataOUT = cell(3,groupNum);
+
+for gi = 1:groupNum
     
-    numCASES = sum(subTab.groupN == gi);
+ numCASES = sum(subTabt.groupN == gi);
     
-    caseINDS = find(subTab.groupN == gi);
+    caseINDS = find(subTabt.groupN == gi);
     
     % Thalamus Volume
     volDif = nan(numCASES,1);
@@ -27,8 +52,8 @@ for gi = 1:3
     for si = 1:numCASES
         
         cI = caseINDS(si);
-        fsurgC = subTab.f_surg_n(cI);
-        ssurgC = subTab.s_surg_n(cI);
+        fsurgC = subTabt.f_surg_n(cI);
+        ssurgC = subTabt.s_surg_n(cI);
         
         fsurgInd = ismember(allOBTab.caseID,fsurgC);
         ssurgInd = ismember(allOBTab.caseID,ssurgC);
@@ -36,7 +61,7 @@ for gi = 1:3
         fsurgTab = allOBTab(fsurgInd,:);
         ssurgTab = allOBTab(ssurgInd,:);
         
-        sideIND = subTab.f_surg_s{cI};
+        sideIND = subTabt.f_surg_s{cI};
         
         if strcmp(sideIND,'L')
             thalFlag = 'L_OB';
@@ -66,41 +91,41 @@ for gi = 1:3
     normDif = normDif(~isnan(normDif));
     
     
-    allCaseD{1,gi} = volDif;
-    allCaseD{2,gi} = normDif;
-    
+    dataOUT{1,gi} = volDif;
+    dataOUT{2,gi} = normDif;
     
 end
 
 
-allSTATS = cell(1,3);
+end
+
+
+
+function [statsOUT] = getSTATS(allCaseDpd, groupNum)
+
+statsOUT = cell(1,groupNum);
 
 for si = 1:3
     
     forSTATS.data = [];
     forSTATS.group = [];
     
-    for g2 = 1:3
+    for g2 = 1:groupNum
         
-        forSTATS.data = [forSTATS.data ; allCaseD{si,g2}];
+        forSTATS.data = [forSTATS.data ; allCaseDpd{si,g2}];
         
-        grTmp = repmat(g2 , length(allCaseD{si,g2}) , 1);
+        grTmp = repmat(g2 , length(allCaseDpd{si,g2}) , 1);
         
         forSTATS.group = [forSTATS.group ; grTmp];
         
     end
     
-    allSTATS{1,si} = forSTATS;
+    statsOUT{1,si} = forSTATS;
     
 end
 
 
 
-
 end
-
-
-
-
 
 

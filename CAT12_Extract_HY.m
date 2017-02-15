@@ -34,7 +34,10 @@ for di = 1:length(dirFoldsA)
     fdirInd = contains(fdirNames,'3D') & contains(fdirNames,'T1');
     
     if sum(fdirInd) == 0
-        continue
+        fdirInd = contains(fdirNames,'3D SPGR AX');
+        if sum(fdirInd) == 0
+            continue
+        end
     end
     
     fdirName2use = fdirNames{fdirInd};
@@ -56,7 +59,13 @@ for di = 1:length(dirFoldsA)
         tmpNf = S.filedata.path;
         tmpParts = strsplit(tmpNf,'\');
         tmpNloc = cellfun(@(x) ~isempty(strfind(x,'Case')), tmpParts, 'UniformOutput',true);
-        tmpCname = tmpParts{tmpNloc};
+        if sum(tmpNloc) > 1
+            tmpNlocU = max(find(tmpNloc)); %#ok<MXFND>
+        else
+            tmpNlocU = tmpNloc;
+        end
+        
+        tmpCname = tmpParts{tmpNlocU};
         tmpCNparts = strsplit(tmpCname,'_');
         caseNUM = tmpCNparts{2};
         
