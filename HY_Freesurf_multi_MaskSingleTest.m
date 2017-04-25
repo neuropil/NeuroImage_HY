@@ -1,5 +1,9 @@
 function [] = HY_Freesurf_multi_MaskSingleTest(brArea,cols,alimV)
 
+
+%%%% NEED THE NUMBERS FOR:
+% THALAMUS, CAUDATE, HIPPOCAMPUS
+% 6 , 7 , 13
 freeSurfdat1 = load_nii('E:\Dropbox\Publications_Meta\InProgress\MW_STNMap_Methods\Matlab_Code\aparc+aseg_E_DTI.nii');
 
 freeSim1 = freeSurfdat1.img;
