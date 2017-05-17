@@ -36,7 +36,7 @@
 % This function
 
 
-function [outSTAT1pd, outSTAT2pd, outSTAT1etpd, outSTAT2etpd] = runHYgraphsStats(ID)
+function [outSTAT1pd, outSTAT2pd, outSTAT1etpd] = runHYgraphsStats(ID)
 
 switch ID
     case 'GM'
@@ -243,29 +243,30 @@ switch ID
         
     case 'OB'
         
-        [~ , OBallSTATS] = subOBVOL_v2_HY(1);
+%         [~ , OBallSTATS] = subOBVOL_v2_HY(1);
         
-        [~,~,outSTAT1pd] = kruskalwallis(OBallSTATS.PD{2}.data , OBallSTATS.PD{2}.group);
+        [~ , OBallSTATS] = subOBVOL_v2b_HY(1);
+        [~,~,outSTAT1pd] = kruskalwallis(OBallSTATS.PD{1}.data , OBallSTATS.PD{1}.group);
         [outSTAT2pd,~,~] = multcompare(outSTAT1pd);
         close all
-        boxplot(OBallSTATS.PD{2}.data , OBallSTATS.PD{2}.group)
+        boxplot(OBallSTATS.PD{1}.data , OBallSTATS.PD{1}.group)
         
-        set(gca,'YLim',[-0.05 5])
+        set(gca,'YLim',[-0.1 0.1])
         yVALs = get(gca,'YTick');
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
-        dataA = [OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1) ; OBallSTATS.ET{2}.data(OBallSTATS.ET{2}.group == 1)];
+        dataA = [OBallSTATS.PD{1}.data(OBallSTATS.PD{1}.group == 1) ; OBallSTATS.ET{1}.data(OBallSTATS.ET{1}.group == 1)];
         
-        groupA =[repmat({'p'},length(OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1)),1) ;...
-            repmat({'c'},length(OBallSTATS.ET{2}.group(OBallSTATS.ET{2}.group == 1)),1)];
+        groupA =[repmat({'p'},length(OBallSTATS.PD{1}.data(OBallSTATS.PD{1}.group == 1)),1) ;...
+            repmat({'c'},length(OBallSTATS.ET{2}.group(OBallSTATS.ET{1}.group == 1)),1)];
         
-        [~,outSTAT1etpd,~] = ttest2(OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1) , OBallSTATS.ET{2}.data(OBallSTATS.ET{2}.group == 1));
+        [~,outSTAT1etpd,~] = ttest2(OBallSTATS.PD{1}.data(OBallSTATS.PD{1}.group == 1) , OBallSTATS.ET{1}.data(OBallSTATS.ET{1}.group == 1));
 
         figure;
         boxplot(dataA , groupA)
         
-        set(gca,'YLim',[-0.05 5])
+        set(gca,'YLim',[-0.1 0.1])
         yVALs = get(gca,'YTick');
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])

@@ -1,4 +1,4 @@
-function [allCaseD , allSTATS] = subOBVOL_v2_HY(absFlag)
+function [allCaseD , allSTATS] = subOBVOL_v2b_HY(absFlag)
 
 cd('Z:\Yilma_Project\CompiledCSVdata')
 
@@ -8,14 +8,14 @@ allOBTab.caseID = cellfun(@(x) str2double(x(2:4)), allOBTab.caseID); %#ok<NODEF>
 
 cd('Z:\Yilma_Project\CompiledCSVdata')
 
-subTab = readtable('ob_subj_data.csv');
+subTab = readtable('ob_subj_data2.csv');
 
 condS = {'PD','ET'};
 for ci = 1:2
     switch ci
         case 1
-            [allCaseD.PD] = getDATA(3, subTab, allOBTab, absFlag, condS{ci});
-            [allSTATS.PD] = getSTATS(allCaseD.PD, 3);
+            [allCaseD.PD] = getDATA(2, subTab, allOBTab, absFlag, condS{ci});
+            [allSTATS.PD] = getSTATS(allCaseD.PD, 2);
         case 2
             [allCaseD.ET] = getDATA(1, subTab, allOBTab, absFlag, condS{ci});
             [allSTATS.ET] = getSTATS(allCaseD.ET, 1);
