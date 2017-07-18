@@ -1,4 +1,4 @@
-function [] = FreeSurf_WMCombine_HY()
+function [] = FreeSurf_WMCombine_HY_v2()
 
 txtLoc = 'Z:\Yilma_Project\CompiledCSVdata\FS_TXT';
 cd(txtLoc)
@@ -10,7 +10,7 @@ flist = {dirList.name};
 iLines = cell(length(flist),1);
 
 totalBrainTable = table;
-totalSegTable = table; 
+totalSegTable = table;
 totalBrainWMTable = table;
 totalSegWMTable = table;
 totalRHTable = table;
@@ -23,7 +23,7 @@ for fi = 1:length(flist)
     nameParts = strsplit(flist{fi},{'_','.'});
     
     analysisT = nameParts{3};
-
+    
     fid = fopen(flist{fi});
     tline = fgets(fid);
     allLines = cell(10000,1);
@@ -193,20 +193,45 @@ dataVals = cell(10000,1);
 colNames = cell(1,10);
 dataCol = cell(200,10);
 dcOl = 1;
-for li = 1:length(inLINES)
+
+if length(inLINES) < 89
     
-    tparts = strsplit(inLINES{li});
-    if strcmp(tparts{2},'Measure')
-        dataNames{outCount} = tparts{4};
-        dataVals{outCount} = textract(tparts);
-        outCount = outCount + 1;
-    elseif strcmp(tparts{2},'ColHeaders')
-        colNames(1,1:10) = tparts(3:length(tparts)-1);
-    elseif isletter(tparts{1}(1)) && ~strcmp(tparts{1}(1),'#')
-        dataCol(dcOl,1:10) = tparts(1:10);
-        dcOl = dcOl + 1;
+    for li = 1:length(inLINES)
+        
+        tparts = strsplit(inLINES{li});
+        if strcmp(tparts{2},'Measure')
+            dataNames{outCount} = tparts{4};
+            dataVals{outCount} = textract(tparts);
+            outCount = outCount + 1;
+        elseif strcmp(tparts{2},'ColHeaders')
+            colNames(1,1:10) = tparts(3:length(tparts)-1);
+        elseif isletter(tparts{1}(1)) && ~strcmp(tparts{1}(1),'#')
+            dataCol(dcOl,1:10) = tparts(1:10);
+            dcOl = dcOl + 1;
+        end
+        
+        
     end
     
+    
+else
+    
+    for li = 1:length(inLINES)
+        
+        tparts = strsplit(inLINES{li});
+        if strcmp(tparts{2},'Measure') && strcmp(tparts{3},'Cortex,') && sum(ismember(tparts{4},{'NumVert,','WhiteSurfArea,','MeanThickness,'})) ~= 0 
+            dataNames{outCount} = tparts{4}(1:end-1);
+            dataVals{outCount} = textract(tparts);
+            outCount = outCount + 1;
+        elseif strcmp(tparts{2},'ColHeaders')
+            colNames(1,1:10) = tparts(3:length(tparts)-1);
+        elseif isletter(tparts{1}(1)) && ~strcmp(tparts{1}(1),'#')
+            dataCol(dcOl,1:10) = tparts(1:10);
+            dcOl = dcOl + 1;
+        end
+        
+        
+    end
     
 end
 
@@ -238,7 +263,7 @@ numCols = sum(tabInd);
 newTable = inTable;
 
 for i = 1:numCols
-   
+    
     
     newTable(:,ind2use(i)) = table(num2cell(str2double(table2array(inTable(:,ind2use(i))))));
     

@@ -9,8 +9,8 @@ condS = {'PD','ET'};
 for ci = 1:2
     switch ci
         case 1
-            [allCaseD.PD] = getDATA(3, subTab, condS{ci});
-            [allSTATS.PD] = getSTATS(allCaseD.PD, 3);
+            [allCaseD.PD] = getDATA(2, subTab, condS{ci});
+            [allSTATS.PD] = getSTATS(allCaseD.PD, 2);
         case 2
             [allCaseD.ET] = getDATA(1, subTab, condS{ci});
             [allSTATS.ET] = getSTATS(allCaseD.ET, 1);
@@ -56,9 +56,9 @@ for gi = 1:groupNum
         sideIND = subTabt.f_surg_s{cI};
         
         if strcmp(sideIND,'L')
-            brainFlag = 'lhCorticalWhiteMatter,';
+            brainFlag = {'lhCorticalWhiteMatter,','lhCerebralWhiteMatter,'};
         else
-            brainFlag = 'rhCorticalWhiteMatter,';
+            brainFlag = {'rhCorticalWhiteMatter,','rhCerebralWhiteMatter,'};
         end
         
         load('TotalBWMTable.mat');
@@ -76,8 +76,8 @@ for gi = 1:groupNum
         FSindT1 = ismember(fsurgTab.BArea,brainFlag);
         SSindT1 = ismember(ssurgTab.BArea,brainFlag);
         
-        FSindT2 = ismember(fsurgTab.BArea,'CorticalWhiteMatter,');
-        SSindT2 = ismember(ssurgTab.BArea,'CorticalWhiteMatter,');
+        FSindT2 = ismember(fsurgTab.BArea,{'CorticalWhiteMatter,','CerebralWhiteMatter,'});
+        SSindT2 = ismember(ssurgTab.BArea,{'CorticalWhiteMatter,','CerebralWhiteMatter,'});
         
         FSindT3 = ismember(fsurgTab.BArea,'EstimatedTotalIntraCranialVol,');
         SSindT3 = ismember(ssurgTab.BArea,'EstimatedTotalIntraCranialVol,');

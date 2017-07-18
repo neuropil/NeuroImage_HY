@@ -36,31 +36,17 @@
 % This function
 
 
-function [outSTAT1pd, outSTAT2pd, outSTAT1etpd] = runHYgraphsStatsDESKtop(ID)
+function [outSTAT1pd, outSTAT2pd, outSTAT1etpd] = runHYgraphsStatsDESKtop2(ID)
 
 switch ID
     case 'GM'
         
         [~ , GMallSTATS] = subXcatTab_v2_HY('GMmni');
         
-        [~,~,outSTAT1pd] = kruskalwallis(GMallSTATS.PD{1}.data , GMallSTATS.PD{1}.group);
-        [outSTAT2pd,~,~] = multcompare(outSTAT1pd);
+        [outSTAT1pd,~,~] = ranksum(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1) , GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 2));
+
         close all
         boxplot(GMallSTATS.PD{1}.data , GMallSTATS.PD{1}.group)
-        
-        set(gca,'YLim',[0 0.05])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
-        dataA = [GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1) ; GMallSTATS.ET{1}.data(GMallSTATS.ET{1}.group == 1)];
-        
-        groupA =[repmat({'p'},length(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1)),1) ;...
-            repmat({'c'},length(GMallSTATS.ET{1}.group(GMallSTATS.ET{1}.group == 1)),1)];
-        
-        [outSTAT1etpd,~,~] = ranksum(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1) , GMallSTATS.ET{1}.data(GMallSTATS.ET{1}.group == 1));
-        figure;
-        boxplot(dataA , groupA)
         
         set(gca,'YLim',[0 0.05])
         yVALs = get(gca,'YTick');
@@ -71,9 +57,9 @@ switch ID
     case 'WM'
         
         [~ , WMallSTATS] = subXcatTab_v2_HY('WMmni');
-        
-        [~,~,outSTAT1pd] = kruskalwallis(WMallSTATS.PD{1}.data , WMallSTATS.PD{1}.group);
-        [outSTAT2pd,~,~] = multcompare(outSTAT1pd);
+
+        [outSTAT1pd,~,~] = ranksum(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1) , WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 2));
+
         close all
         boxplot(WMallSTATS.PD{1}.data , WMallSTATS.PD{1}.group)
         
@@ -81,28 +67,13 @@ switch ID
         yVALs = get(gca,'YTick');
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
-        dataA = [WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1) ; WMallSTATS.ET{1}.data(WMallSTATS.ET{1}.group == 1)];
-        
-        groupA =[repmat({'p'},length(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1)),1) ;...
-            repmat({'c'},length(WMallSTATS.ET{1}.group(WMallSTATS.ET{1}.group == 1)),1)];
-        
-        [outSTAT1etpd,~,~] = ranksum(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1) , WMallSTATS.ET{1}.data(WMallSTATS.ET{1}.group == 1));
-        %         [outSTAT2etpd,~,~] = multcompare(outSTAT1etpd);
-        figure;
-        boxplot(dataA , groupA)
-        
-        set(gca,'YLim',[0 0.09])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
+
     case 'IH'
         
         [~ , impHemiSTATS] = subXFStabCortM_v2_HY();
         
-        [~,~,outSTAT1pd] = kruskalwallis(impHemiSTATS.PD{2}.data , impHemiSTATS.PD{2}.group);
-        [outSTAT2pd,~,~] = multcompare(outSTAT1pd);
+        [outSTAT1pd,~,~] = ranksum(impHemiSTATS.PD{2}.data(impHemiSTATS.PD{2}.group == 1) , impHemiSTATS.PD{2}.data(impHemiSTATS.PD{2}.group == 2));
+        
         close all
         boxplot(impHemiSTATS.PD{2}.data , impHemiSTATS.PD{2}.group)
         
@@ -111,26 +82,11 @@ switch ID
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
-        dataA = [impHemiSTATS.PD{2}.data(impHemiSTATS.PD{2}.group == 1) ; impHemiSTATS.ET{2}.data(impHemiSTATS.ET{2}.group == 1)];
-        
-        groupA =[repmat({'p'},length(impHemiSTATS.PD{2}.data(impHemiSTATS.PD{2}.group == 1)),1) ;...
-            repmat({'c'},length(impHemiSTATS.ET{2}.group(impHemiSTATS.ET{2}.group == 1)),1)];
-        
-        [outSTAT1etpd,~,~] = ranksum(impHemiSTATS.PD{2}.data(impHemiSTATS.PD{2}.group == 1) , impHemiSTATS.ET{2}.data(impHemiSTATS.ET{2}.group == 1));
-        %         [outSTAT2etpd,~,~] = multcompare(outSTAT1etpd);
-        figure;
-        boxplot(dataA , groupA)
-        
-        set(gca,'YLim',[-0.001 0.16])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
     case 'Caudate'
         [~ , cadallSTATS] = subXFStabSEG_v2_HY('Caud');
         
-        [~,~,outSTAT1pd] = kruskalwallis(cadallSTATS.PD{2}.data , cadallSTATS.PD{2}.group);
-        [outSTAT2pd,~,~] = multcompare(outSTAT1pd);
+        [outSTAT1pd,~,~] = ranksum(cadallSTATS.PD{2}.data(cadallSTATS.PD{2}.group == 1) , cadallSTATS.PD{2}.data(cadallSTATS.PD{2}.group == 2));
         close all
         boxplot(cadallSTATS.PD{2}.data , cadallSTATS.PD{2}.group)
         
@@ -139,20 +95,7 @@ switch ID
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
-        dataA = [cadallSTATS.PD{2}.data(cadallSTATS.PD{2}.group == 1) ; cadallSTATS.ET{2}.data(cadallSTATS.ET{2}.group == 1)];
-        
-        groupA =[repmat({'p'},length(cadallSTATS.PD{2}.data(cadallSTATS.PD{2}.group == 1)),1) ;...
-            repmat({'c'},length(cadallSTATS.ET{2}.group(cadallSTATS.ET{2}.group == 1)),1)];
-        
-        [outSTAT1etpd,~,~] = ranksum(cadallSTATS.PD{2}.data(cadallSTATS.PD{2}.group == 1) , cadallSTATS.ET{2}.data(cadallSTATS.ET{2}.group == 1));
-        
-        figure;
-        boxplot(dataA , groupA)
-        
-        set(gca,'YLim',[-0.001 0.16])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
+       
         
     case 'Hippocampus'
         
@@ -187,8 +130,8 @@ switch ID
         
         [~ , thdallSTATS] = subXFStabSEG_v2_HY('Thal');
         
-        [~,~,outSTAT1pd] = kruskalwallis(thdallSTATS.PD{2}.data , thdallSTATS.PD{2}.group);
-        [outSTAT2pd,~,~] = multcompare(outSTAT1pd);
+        [outSTAT1pd,~,~] = ranksum(thdallSTATS.PD{2}.data(thdallSTATS.PD{2}.group == 1) , thdallSTATS.PD{2}.data(thdallSTATS.PD{2}.group == 2));
+
         close all
         boxplot(thdallSTATS.PD{2}.data , thdallSTATS.PD{2}.group)
         
@@ -197,49 +140,21 @@ switch ID
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
-        dataA = [thdallSTATS.PD{2}.data(thdallSTATS.PD{2}.group == 1) ; thdallSTATS.ET{2}.data(thdallSTATS.ET{2}.group == 1)];
-        
-        groupA =[repmat({'p'},length(thdallSTATS.PD{2}.data(thdallSTATS.PD{2}.group == 1)),1) ;...
-            repmat({'c'},length(thdallSTATS.ET{2}.group(thdallSTATS.ET{2}.group == 1)),1)];
-        
-        [outSTAT1etpd,~,~] = ranksum(thdallSTATS.PD{2}.data(thdallSTATS.PD{2}.group == 1) , thdallSTATS.ET{2}.data(thdallSTATS.ET{2}.group == 1));
-
-        figure;
-        boxplot(dataA , groupA)
-        
-        set(gca,'YLim',[-0.001 0.2])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
     case 'OBFc'
         
         [~ , loballSTATS] = subXFStabHemi_v2_HY('latOB');
         
-        [~,~,outSTAT1pd] = kruskalwallis(loballSTATS.PD{1}.data , loballSTATS.PD{1}.group);
-        [outSTAT2pd,~,~] = multcompare(outSTAT1pd);
-        close all
-        boxplot(loballSTATS.PD{1}.data , loballSTATS.PD{1}.group)
-        
-        set(gca,'YLim',[-0.001 0.3])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
-        dataA = [loballSTATS.PD{1}.data(loballSTATS.PD{1}.group == 1) ; loballSTATS.ET{1}.data(loballSTATS.ET{1}.group == 1)];
-        
-        groupA =[repmat({'p'},length(loballSTATS.PD{1}.data(loballSTATS.PD{1}.group == 1)),1) ;...
-            repmat({'c'},length(loballSTATS.ET{1}.group(loballSTATS.ET{1}.group == 1)),1)];
-        
-        [~,outSTAT1etpd,~] = ttest2(loballSTATS.PD{1}.data(loballSTATS.PD{1}.group == 1) , loballSTATS.ET{1}.data(loballSTATS.ET{1}.group == 1));
+        [outSTAT2pd,~,~] = ranksum(loballSTATS.PD{2}.data(loballSTATS.PD{2}.group == 1) , loballSTATS.PD{2}.data(loballSTATS.PD{2}.group == 2));
 
-        figure;
-        boxplot(dataA , groupA)
+        close all
+        boxplot(loballSTATS.PD{2}.data , loballSTATS.PD{2}.group)
         
         set(gca,'YLim',[-0.001 0.3])
         yVALs = get(gca,'YTick');
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
+        
         
     case 'OB'
         

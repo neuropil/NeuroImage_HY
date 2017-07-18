@@ -35,11 +35,11 @@ condS = {'PD','ET'};
 for ci = 1:2
     switch ci
         case 1
-            [allCaseD.PD] = getDATA(3, subTab, allTable, pUSE, condS{ci});
-            [allSTATS.PD] = getSTATS(allCaseD.PD, 3);
+            [allCaseD.PD] = getDATA(2, subTab, allTable, pUSE, condS{ci});
+            [allSTATS.PD] = getSTATS(allCaseD.PD, 2);
         case 2
-            [allCaseD.ET] = getDATA(1, subTab, allTable, pUSE, condS{ci});
-            [allSTATS.ET] = getSTATS(allCaseD.ET, 1);
+            [allCaseD.ET] = getDATA(2, subTab, allTable, pUSE, condS{ci});
+            [allSTATS.ET] = getSTATS(allCaseD.ET, 2);
     end
 end
 
