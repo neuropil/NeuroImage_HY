@@ -36,12 +36,12 @@
 % This function
 
 
-function [outSTAT1pd, outSTAT2pd, outSTAT1etpd] = runHYgraphsStatsDESKtop2(ID)
+function [outSTAT1pd, outSTAT2pd, outSTAT1etpd] = runHYgraphsStatsDESKtop3(ID)
 
 switch ID
-    case 'GM'
+    case 'GM' %%% DONE
         
-        [~ , GMallSTATS] = subXcatTab_v2_HY('GMmni');
+        [~ , GMallSTATS] = subXcatTab_v3_HY('GMmni');
         
         [outSTAT1pd,~,~] = ranksum(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1) , GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 2));
         
@@ -54,9 +54,9 @@ switch ID
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
         
-    case 'WM'
+    case 'WM' %%% DONE
         
-        [~ , WMallSTATS] = subXcatTab_v2_HY('WMmni');
+        [~ , WMallSTATS] = subXcatTab_v3_HY('WMmni');
         
         [outSTAT1pd,~,~] = ranksum(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1) , WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 2));
         
@@ -68,7 +68,7 @@ switch ID
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
-    case 'IH'
+    case 'IH' %%% DONE
         
         [~ , impHemiSTATS] = subXFStabCortM_v3_HY();
         
@@ -83,21 +83,8 @@ switch ID
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
         
-    case 'Caudate'
-        [~ , cadallSTATS] = subXFStabSEG_v2_HY('Caud');
         
-        [outSTAT1pd,~,~] = ranksum(cadallSTATS.PD{2}.data(cadallSTATS.PD{2}.group == 1) , cadallSTATS.PD{2}.data(cadallSTATS.PD{2}.group == 2));
-        close all
-        boxplot(cadallSTATS.PD{2}.data , cadallSTATS.PD{2}.group)
-        
-        set(gca,'YLim',[-0.001 0.16])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
-        
-        
-    case 'Hippocampus'
+    case 'Hippocampus' %%% DONE
         
         [~ , hidallSTATS] = subXhippo_HY();
         
@@ -117,7 +104,7 @@ switch ID
             
         end
         
-    case 'Thal-Caud'
+    case 'Thal-Caud' %%% DONE
         
         [~ , thdallSTATS] = subXFStabSEG_v3_HY();
         close all
@@ -138,22 +125,29 @@ switch ID
         end
         
         
-    case 'OBFc'
+    case 'OBFc' %%% DONE
         
-        [~ , loballSTATS] = subXFStabHemi_v2_HY('latOB');
-        
-        [outSTAT2pd,~,~] = ranksum(loballSTATS.PD{2}.data(loballSTATS.PD{2}.group == 1) , loballSTATS.PD{2}.data(loballSTATS.PD{2}.group == 2));
+        [~ , loballSTATS] = subXFStabHemi_v3_HY();
         
         close all
-        boxplot(loballSTATS.PD{2}.data , loballSTATS.PD{2}.group)
+        for pi = 1:length(loballSTATS.PD)
+            figure
+            
+            tmpData = loballSTATS.PD{pi}.data;
+            tmpID = loballSTATS.PD{pi}.group;
+            
+            [pval,~,~ ] = ranksum(tmpData(tmpID == 1),tmpData(tmpID == 2));
+            
+            boxplot(tmpData,tmpID)
+            
+            set(gca,'XTick',1:2)
+            set(gca,'XTickLabel',{'NoStim','Stim'})
+            title([loballSTATS.PD{pi}.brN ,'  ', num2str(pval)])
+            
+        end
         
-        set(gca,'YLim',[-0.001 0.3])
-        yVALs = get(gca,'YTick');
         
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
-        
-    case 'OB'
+    case 'OB' %%% DONE
         
         %         [~ , OBallSTATS] = subOBVOL_v2_HY(1);
         

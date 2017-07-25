@@ -77,10 +77,10 @@ switch stage
             allLind = cellfun(@(x) ~isempty(x), allLines);
             allLines = allLines(allLind);
             iLines{fi} = allLines;
-
+            
             [thippoTab] = extractFiles(allLines,caseID,sideID);
             hippoSegTable = [hippoSegTable ; thippoTab]; %#ok<*AGROW>
-
+            
             
             
             
@@ -89,17 +89,20 @@ switch stage
         fclose(fid);
         missedFiles = nan;
         
+        
+        cd('Z:\Yilma_Project\CompiledCSVdata')
+        
+        
+        % Subcortical Cortical
+        save('TotalHippoTable.mat','hippoSegTable');
+        
+        writetable(hippoSegTable,'tHippoTable.csv')
+        
 end
 
 
 
-cd('Z:\Yilma_Project\CompiledCSVdata')
 
-
-% Subcortical Cortical
-save('TotalHippoTable.mat','hippoSegTable');
-
-writetable(hippoSegTable,'tHippoTable.csv')
 
 
 
@@ -125,7 +128,7 @@ colNames = {'Case','HippoArea','Volmm3','HemiS'};
 for li = 1:length(inLINES)
     
     tparts = strsplit(inLINES{li});
-
+    
     dataNames{li} = tparts{1};
     dataVals{li} = round(str2double(tparts{2}),3);
     caseCol{li} = caseID;
@@ -135,7 +138,7 @@ for li = 1:length(inLINES)
     else
         sideCol{li} = 'R';
     end
-
+    
 end
 
 brainAind = cellfun(@(x) ~isempty(x), dataNames);

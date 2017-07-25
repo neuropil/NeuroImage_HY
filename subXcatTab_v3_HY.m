@@ -1,4 +1,4 @@
-function [allCaseD , allSTATS] = subXcatTab_v2_HY(param)
+function [allCaseD , allSTATS] = subXcatTab_v3_HY(param)
 
 
 switch param
@@ -31,17 +31,9 @@ load('CAT12_All.mat');
 allTable.CaseNum2 = cellfun(@(x) str2double(x), allTable.CaseNum); %#ok<NODEF>
 
 % allCaseDpd = cell(3,3);
-condS = {'PD','ET'};
-for ci = 1:2
-    switch ci
-        case 1
-            [allCaseD.PD] = getDATA(2, subTab, allTable, pUSE, condS{ci});
-            [allSTATS.PD] = getSTATS(allCaseD.PD, 2);
-        case 2
-            [allCaseD.ET] = getDATA(2, subTab, allTable, pUSE, condS{ci});
-            [allSTATS.ET] = getSTATS(allCaseD.ET, 2);
-    end
-end
+
+[allCaseD.PD] = getDATA(2, subTab, allTable, pUSE, 'PD');
+[allSTATS.PD] = getSTATS(allCaseD.PD, 2);
 
 
 
