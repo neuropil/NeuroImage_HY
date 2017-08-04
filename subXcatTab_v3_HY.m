@@ -46,7 +46,7 @@ function [dataOUT] = getDATA(groupNum, subTab, allTable, pUSE, condI)
 condIn = ismember(subTab.cond,condI);
 subTabt = subTab(condIn,:);
 
-dataOUT = cell(3,groupNum);
+dataOUT = cell(2,groupNum);
 
 for gi = 1:groupNum
     
@@ -54,13 +54,10 @@ for gi = 1:groupNum
     
     caseINDS = find(subTabt.groupN == gi);
     
-    % TIV
+    % 
     absDif = nan(numCASES,1);
     
-    % WM_MNI
-    signDir = nan(numCASES,1);
-    
-    % WM_NAT
+    % 
     relDif = nan(numCASES,1);
     
     ti = 1;
@@ -78,11 +75,10 @@ for gi = 1:groupNum
             continue
         else
 
-            relDif(ti,1) = (double(allTable.(pUSE)(fsurgInd)) - double(allTable.(pUSE)(ssurgInd))) / double(max([allTable.(pUSE)(fsurgInd) , allTable.(pUSE)(ssurgInd)]));
-
+%             relDif(ti,1) = (double(allTable.(pUSE)(fsurgInd)) - double(allTable.(pUSE)(ssurgInd))) / double(max([allTable.(pUSE)(fsurgInd) , allTable.(pUSE)(ssurgInd)]));
+            relDif(ti,1) = double(allTable.(pUSE)(ssurgInd)) - double(allTable.(pUSE)(fsurgInd));
             absDif(ti,1) = double(allTable.(pUSE)(ssurgInd) - allTable.(pUSE)(fsurgInd)) / double(allTable.(pUSE)(fsurgInd));
             
-            signDir(ti,1) = sign(absDif(ti,1));
             
             ti = ti + 1;
         end
@@ -90,11 +86,11 @@ for gi = 1:groupNum
     
     relDif = relDif(~isnan(relDif));
     absDif = absDif(~isnan(absDif));
-    signDir = signDir(~isnan(signDir));
+
     
     dataOUT{1,gi} = relDif;
     dataOUT{2,gi} = absDif;
-    dataOUT{3,gi} = signDir;
+
     
 end
 
@@ -107,7 +103,7 @@ function [statsOUT] = getSTATS(allCaseDpd, groupNum)
 
 statsOUT = cell(1,groupNum);
 
-for si = 1:3
+for si = 1:2
     
     forSTATS.data = [];
     forSTATS.group = [];

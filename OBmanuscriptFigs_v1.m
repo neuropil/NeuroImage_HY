@@ -36,121 +36,10 @@
 % This function
 
 
-function [outSTAT1pd, outSTAT2pd, outSTAT1etpd] = runHYgraphsStatsDESKtop3(ID)
+function [outSTAT1pd, outSTAT2pd, outSTAT1etpd] = OBmanuscriptFigs_v1(ID)
 
 switch ID
-    case 'GM' %%% DONE
-        
-        [~ , GMallSTATS] = subXcatTab_v3_HY('GMmni');
-        
-        [outSTAT1pd,~,~] = ranksum(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1) , GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 2));
-        
-        close all
-        boxplot(GMallSTATS.PD{1}.data , GMallSTATS.PD{1}.group, 'Colors', [0 0 0])
-        
-        %         set(gca,'YLim',[0 0.05])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
-        set(gca,'XTickLabel',{'NoStim','Stim'});
-        ylabel('Relative change in volume')
-        
-        % scatter points
-        scatDat = [[ GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1) ;...
-            GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 2) ],...
-            [ones(size(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1))) ;...
-            repmat(2,size(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 2)))]];
-        
-        scatCols = [repmat([0 0 0],size(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 1))) ;...
-            repmat([0.5 0.5 0.5],size(GMallSTATS.PD{1}.data(GMallSTATS.PD{1}.group == 2)))];
-        
-        hold on
-        
-        scatter(scatDat(:,2),scatDat(:,1),40,scatCols,'filled')
-        
-        %% Add p-value
-        text(2,max(yVALs) - abs(min(yVALs)/2), sprintf('p = %0.2f',outSTAT1pd))
-        
-        axis square
-        
-        
-        
-        
-    case 'WM' %%% DONE
-        
-        [~ , WMallSTATS] = subXcatTab_v3_HY('WMmni');
-        
-        [outSTAT1pd,~,~] = ranksum(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1) , WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 2));
-        
-        close all
-        boxplot(WMallSTATS.PD{1}.data , WMallSTATS.PD{1}.group, 'Colors', [ 0 0 0])
-        
-        %         set(gca,'YLim',[0 0.09])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
-        
-        set(gca,'XTickLabel',{'NoStim','Stim'});
-        ylabel('Relative change in volume')
-        
-        % scatter points
-        scatDat = [[ WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1) ;...
-            WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 2) ],...
-            [ones(size(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1))) ;...
-            repmat(2,size(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 2)))]];
-        
-        scatCols = [repmat([0 0 0],size(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 1))) ;...
-            repmat([0.5 0.5 0.5],size(WMallSTATS.PD{1}.data(WMallSTATS.PD{1}.group == 2)))];
-        
-        hold on
-        
-        scatter(scatDat(:,2),scatDat(:,1),40,scatCols,'filled')
-        
-        %% Add p-value
-        text(2,max(yVALs) - abs(min(yVALs)/2), sprintf('p = %0.3f',outSTAT1pd))
-        
-        axis square
-        
-        
-    case 'IH' %%% DONE
-        
-        [~ , impHemiSTATS] = subXFStabCortM_v3_HY();
-        
-        [outSTAT1pd,~,~] = ranksum(impHemiSTATS.PD{1}.data(impHemiSTATS.PD{1}.group == 1) , impHemiSTATS.PD{1}.data(impHemiSTATS.PD{1}.group == 2));
-        
-        close all
-        boxplot(impHemiSTATS.PD{1}.data , impHemiSTATS.PD{1}.group, 'Colors', [0 0 0])
-        
-        set(gca,'YLim',[-12 4])
-        yVALs = get(gca,'YTick');
-        
-        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
-        
-        set(gca,'XTickLabel',{'NoStim','Stim'});
-        ylabel('Percent change in volume relative to nonstim hemisphere')
-        
-        % scatter points
-        scatDat = [[ impHemiSTATS.PD{1}.data(impHemiSTATS.PD{1}.group == 1) ;...
-            impHemiSTATS.PD{1}.data(impHemiSTATS.PD{1}.group == 2) ],...
-            [ones(size(impHemiSTATS.PD{1}.data(impHemiSTATS.PD{1}.group == 1))) ;...
-            repmat(2,size(impHemiSTATS.PD{1}.data(impHemiSTATS.PD{1}.group == 2)))]];
-        
-        scatCols = [repmat([0 0 0],size(impHemiSTATS.PD{1}.data(impHemiSTATS.PD{1}.group == 1))) ;...
-            repmat([0.5 0.5 0.5],size(impHemiSTATS.PD{1}.data(impHemiSTATS.PD{1}.group == 2)))];
-        
-        hold on
-        
-        scatter(scatDat(:,2),scatDat(:,1),40,scatCols,'filled')
-        
-        %% Add p-value
-        text(2,max(yVALs) - abs(min(yVALs)/2), sprintf('p = %0.3f',outSTAT1pd))
-        
-        axis square
-        
-        
-        
+    
     case 'Hippocampus' %%% DONE
         
         [~ , hidallSTATS, ids] = subXhippo_HYb(2,1);
@@ -173,7 +62,7 @@ switch ID
             
             set(gca,'XTick',1:2)
             set(gca,'XTickLabel',{'NoStim','Stim'})
-            title([hidallSTATS.PD{pi}.brN ,'  ', num2str(pval)])
+            title([hidallSTATS.PD{pi}.brN],'Interpreter','none')
             
             scatDat = [[ hidallSTATS.PD{1}.data(hidallSTATS.PD{1}.group == 1) ;...
                 hidallSTATS.PD{1}.data(hidallSTATS.PD{1}.group == 2) ],...
@@ -192,14 +81,21 @@ switch ID
             
             axis square
             
+            cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+            
+            fname = ['Figure1_',hidallSTATS.PD{pi}.brN,'.pdf'];
+            
+            saveas(gcf, fname)
+            
         end
         close all
         figure
-                tmpMin = 0;
+        
+        tmpMin = 0;
         tmpMax = 5;
         for pi2 = 1:length(hidallSTATS.PD)
             
-            
+            cd('Z:\Yilma_Project\CompiledCSVdata')
             
             %         g1 = hidallSTATS.PD{2}.data(hidallSTATS.PD{2}.group == 1);
             g2 = hidallSTATS.PD{pi2}.data(hidallSTATS.PD{pi2}.group == 2);
@@ -213,23 +109,26 @@ switch ID
             tPDg3 = tPDg2(tPDg2.f_surg_n == gr2IDS,:);
             stD = tPDg3.stimdur;
             %         nstD = tPDg1.stimdur;
-            title([hidallSTATS.PD{pi2}.brN ,'  ', num2str(pval)])
+            title('hippocampus')
             coef_fit = polyfit(stD,ga2,1);
             y_fit = polyval(coef_fit,stD);
             
             line([min(stD) max(stD)], [y_fit(1) y_fit(length(y_fit))],'Color',[1 redS(pi2) redS(pi2)])
             
+            hidallSTATS.PD{pi2}.brN
             
             tmpMin2 = min(ga2);
             tmpMax2 = max(ga2);
             
             if tmpMin2 < tmpMin
+                tmpMin = tmpMin2;
                 yMin = tmpMin2;
             else
                 yMin = tmpMin;
             end
             
             if tmpMax2 > tmpMax
+                tmpMax = tmpMax2;
                 yMax = tmpMax2;
             else
                 yMax = tmpMax;
@@ -238,8 +137,18 @@ switch ID
             ylim([yMin yMax])
             [~ , pval2] = corr(stD,ga2);
             
-            
         end
+        
+        yVALs = get(gca,'YTick');
+        
+        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
+        ylim([min(yVALs) max(yVALs)])
+        
+        xticks(linspace(min(stD),max(stD),5))
+        xlim([min(stD) max(stD)])
+
+        ylabel('Absolute percent change')
+        xlabel('Duration of stimulation (days)')
         
     case 'Thal-Caud' %%% DONE
         
@@ -305,7 +214,7 @@ switch ID
             stD = tPDg2.stimdur;
             %         nstD = tPDg1.stimdur;
             title([thdallSTATS.PD{pi2}.brN ,'  ', num2str(pval)])
-%             plot(stD,ga2,'o','Color',[blues(pi2) blues(pi2) 1])
+            %             plot(stD,ga2,'o','Color',[blues(pi2) blues(pi2) 1])
             hold on
             %             line([min(get(gca,'XTick')) , max(get(gca,'XTick'))],[0 0],'LineStyle','--','Color','k')
             
@@ -380,7 +289,7 @@ switch ID
             axis square
             
         end
-                close all
+        close all
         figure
         tmpMin = 0;
         tmpMax = 5;
@@ -401,7 +310,7 @@ switch ID
             stD = tPDg2.stimdur;
             %         nstD = tPDg1.stimdur;
             title([loballSTATS.PD{pi2}.brN ,'  ', num2str(pval)])
-%             plot(stD,ga2,'o','Color',[blues(pi2) blues(pi2) 1])
+            %             plot(stD,ga2,'o','Color',[blues(pi2) blues(pi2) 1])
             hold on
             %             line([min(get(gca,'XTick')) , max(get(gca,'XTick'))],[0 0],'LineStyle','--','Color','k')
             
