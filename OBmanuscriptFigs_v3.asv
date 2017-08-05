@@ -138,15 +138,12 @@ switch ID
             
             text(xT2,yT - 1,hidallSTATS.PD{ti}.brN,'Color',[1 redS(ti) redS(ti)])
             text(xT2 + 200,yT - 1,sprintf('%0.2f',pVals(ti)),'Color','k')
-            text(xT2 + 250,yT - 1,sprintf('%0.2f',rhos(ti)),'Color','k')
             
             yT = yT - 1;
         end
         
-         cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+        cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
         
-         
-         axis square
         fname = 'Figure1_HippoCorr.pdf';
         
         saveas(gcf, fname)
@@ -196,7 +193,7 @@ switch ID
             
             axis square
             
-            cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+            cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
             
             fname = ['Figure2_',loballSTATS.PD{pi}.brN,'.pdf'];
             
@@ -207,11 +204,10 @@ switch ID
         figure
         tmpMin = 0;
         tmpMax = 5;
-        pVals = zeros(1,length(loballSTATS.PD));
-        rhos = zeros(1,length(loballSTATS.PD));
+        pVals = zeros(1:length(loballSTATS.PD));
         for pi2 = 1:length(loballSTATS.PD)
             
-            cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
+            cd('Z:\Yilma_Project\CompiledCSVdata')
             
             g2 = loballSTATS.PD{pi2}.data(loballSTATS.PD{pi2}.group == 2);
             
@@ -227,16 +223,8 @@ switch ID
             
             coef_fit = polyfit(stD,ga2,1);
             y_fit = polyval(coef_fit,stD);
-            [rhos(pi2) , pVals(pi2)] = corr(stD,ga2);
-            if rhos(pi2) < 0
-                
-                line([min(stD) max(stD)], [y_fit(1) y_fit(length(y_fit))],'Color',[greens(pi2) 1 greens(pi2)])
-                
-            else
-                
-                line([min(stD) max(stD)], [y_fit(length(y_fit)) y_fit(1)],'Color',[greens(pi2) 1 greens(pi2)])
-                
-            end
+            
+            line([min(stD) max(stD)], [y_fit(1) y_fit(length(y_fit))],'Color',[greens(pi2) 1 greens(pi2)])
             
             tmpMin2 = min(ga2);
             tmpMax2 = max(ga2);
@@ -256,7 +244,7 @@ switch ID
             end
             
             ylim([yMin yMax])
-            
+            [~ , pVals(pi2)] = corr(stD,ga2);
             
         end
         yVALs = get(gca,'YTick');
@@ -279,12 +267,10 @@ switch ID
             
             text(xT2,yT - 2,loballSTATS.PD{ti}.brN,'Color',[greens(ti) 1 greens(ti)])
             text(xT2 + 200,yT - 2,sprintf('%0.2f',pVals(ti)),'Color','k')
-            text(xT2 + 300,yT - 2,sprintf('%0.2f',rhos(ti)),'Color','k')
             
             yT = yT - 2;
         end
-        cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
-        axis square
+        cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
         
         fname = 'Figure2_OC_Corr.pdf';
         
@@ -381,17 +367,15 @@ switch ID
         
 
         text(xT2 + 200,yT - 2,sprintf('p = %0.2f',pval2),'Color','k')
-        text(xT2 + 200,yT - 5,sprintf('r = %0.2f',rho1),'Color','k')
+        text(xT2 + 200,yT - 2,sprintf('r = %0.2f',rho1),'Color','k')
 
         
         cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
         
         fname = 'Figure3_OB_Corr.pdf';
         
-        axis square
-        
         saveas(gcf, fname)
-        close all
+        
         
         
         

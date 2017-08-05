@@ -5,7 +5,7 @@ function [allCaseD , allSTATS] = subXFStabHemi_v4_HY(ICVFlag)
 
 bNames = {'entorhinal','lateralorbitofrontal','medialorbitofrontal'};
 
-cd('Z:\Yilma_Project\CompiledCSVdata')
+cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
 
 subTab = readtable('ob_subj_data.csv');
 
