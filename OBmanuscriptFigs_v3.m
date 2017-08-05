@@ -1,37 +1,4 @@
-%% Step 1
 
-% fprintf('Running Step 1 \n')
-%
-% FreeSurf_stats2txt_HY()
-%
-% fprintf('Step 1 Complete \n')
-
-%% Step 2
-
-% fprintf('Running Step 2 \n')
-%
-% FreeSurf_WMCombine_HY()
-%
-% fprintf('Step 2 Complete \n')
-
-%% Step 3
-
-% fprintf('Running Step 3 \n')
-%
-% CAT12_Extract_HY()
-%
-% fprintf('Step 3 Complete \n')
-
-%% Step 4
-
-% OB_VolumeExtract_HY()
-
-
-%% Step 5
-
-% OB_CreateAllCSV_HY()
-
-%% Step 6
 
 % This function
 
@@ -81,7 +48,7 @@ switch ID
             
             axis square
             
-            cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+            cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
             
             fname = ['Figure1_',hidallSTATS.PD{pi}.brN,'.pdf'];
             
@@ -97,7 +64,7 @@ switch ID
         rhos = zeros(1,length(hidallSTATS.PD));
         for pi2 = 1:length(hidallSTATS.PD)
             
-            cd('Z:\Yilma_Project\CompiledCSVdata')
+            cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
             
             %         g1 = hidallSTATS.PD{2}.data(hidallSTATS.PD{2}.group == 1);
             g2 = hidallSTATS.PD{pi2}.data(hidallSTATS.PD{pi2}.group == 2);
@@ -147,7 +114,7 @@ switch ID
             end
             
             ylim([yMin yMax])
-           
+            
             
         end
         
@@ -315,30 +282,50 @@ switch ID
         
         [~ , OBallSTATS] = subOBVOL_v2c_HY(1,1);
         
-        [outSTAT2pd,~,~] = ranksum(OBallSTATS.PD{1}.data(OBallSTATS.PD{1}.group == 1) , OBallSTATS.PD{1}.data(OBallSTATS.PD{1}.group == 2));
+        [pval,~,~] = ranksum(OBallSTATS.PD{1}.data(OBallSTATS.PD{1}.group == 1) , OBallSTATS.PD{1}.data(OBallSTATS.PD{1}.group == 2));
         
         close all
-        boxplot(OBallSTATS.PD{2}.data , OBallSTATS.PD{2}.group,'Colors','b')
+        boxplot(OBallSTATS.PD{2}.data , OBallSTATS.PD{2}.group)
         
         set(gca,'XTick',1:2)
         set(gca,'XTickLabel',{'NoStim','Stim'})
         
+        title(['OB  ', num2str(pval)])
         
-        %         set(gca,'YLim',[-0.1 0.1])
         yVALs = get(gca,'YTick');
         
         yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
         
-%         g1 = OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1);
+        scatDat = [[ OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1) ;...
+            OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 2) ],...
+            [ones(size(OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1))) ;...
+            repmat(2,size(OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 2)))]];
+        
+        scatCols = [repmat([0 0 0],size(OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1))) ;...
+            repmat([0 0 1],size(OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 2)))];
+        
+        hold on
+        
+        scatter(scatDat(:,2),scatDat(:,1),40,scatCols,'filled')
+        axis square
+        
+        cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+        
+        fname = 'Figure3_OB.pdf';
+        
+        saveas(gcf, fname)
+        
+        close all
+        %         g1 = OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1);
         g2 = OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 2);
-%         ga1 = abs(g1);
+        %         ga1 = abs(g1);
         ga2 = abs(g2);
         t = readtable('ob_subj_data.csv');
         tPD = t(ismember(t.cond,'PD'),:);
         tPDg2 = tPD(tPD.groupN == 2,:);
-%         tPDg1 = tPD(tPD.groupN == 1,:);
+        %         tPDg1 = tPD(tPD.groupN == 1,:);
         stD = tPDg2.stimdur;
-%         nstD = tPDg1.stimdur;
+        %         nstD = tPDg1.stimdur;
         
         %         figure;
         %         plot(stD,g2,'ro')
@@ -356,9 +343,26 @@ switch ID
         
         line([min(stD) max(stD)], [y_fit(length(y_fit)) y_fit(1)],'Color','b')
         
+        yVALs = get(gca,'YTick');
+        
+        yticks([min(yVALs) round((max(yVALs) - min(yVALs))/2,3)+min(yVALs)  max(yVALs)])
+        ylim([min(yVALs) max(yVALs)])
+        
+        xticks(linspace(min(stD),max(stD),5))
+        xlim([min(stD) max(stD)])
+        
+        ylabel('Absolute percent change')
+        xlabel('Duration of stimulation (days)')
+        
         [~ , pval2] = corr(stD,ga2);
         
+        axis square
         
+        cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+        
+        fname = 'Figure3_OB_Corr.pdf';
+        
+        saveas(gcf, fname)
         
         
         

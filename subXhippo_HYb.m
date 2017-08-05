@@ -7,7 +7,7 @@ if comp == 1
     
 elseif comp == 2
     
-    cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
+    cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
     
 end
 

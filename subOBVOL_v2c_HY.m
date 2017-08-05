@@ -1,12 +1,12 @@
 function [allCaseD , allSTATS] = subOBVOL_v2c_HY(absFlag,ICVFlag)
 
-cd('Z:\Yilma_Project\CompiledCSVdata')
+cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
 
 load('AllOBdata.mat');
 
 allOBTab.caseID = cellfun(@(x) str2double(x(2:4)), allOBTab.caseID); %#ok<NODEF>
 
-cd('Z:\Yilma_Project\CompiledCSVdata')
+% cd('Z:\Yilma_Project\CompiledCSVdata')
 
 subTab = readtable('ob_subj_data.csv');
 
