@@ -9,7 +9,7 @@ switch ID
     
     case 'Hippocampus' %%% DONE
         
-        [~ , hidallSTATS, ids] = subXhippo_HYb(2,1,2);
+        [~ , hidallSTATS, ids] = subXhippo_HYb(2,1,1);
         gr2IDS = transpose([ids{2,:}]);
         redS = linspace(0,0.7,length(hidallSTATS.PD));
         
@@ -143,10 +143,10 @@ switch ID
             yT = yT - 1;
         end
         
-         cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+        cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
         
-         
-         axis square
+        
+        axis square
         fname = 'Figure1_HippoCorr.pdf';
         
         saveas(gcf, fname)
@@ -323,7 +323,19 @@ switch ID
         scatter(scatDat(:,2),scatDat(:,1),40,scatCols,'filled')
         axis square
         
-        cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+        hostname = char( getHostName( java.net.InetAddress.getLocalHost ) );
+        
+        if strcmp(hostname,'JAT-PC')
+            
+            cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+            
+        else
+            
+            cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+            
+        end
+        
+        
         
         fname = 'Figure3_OB.pdf';
         
@@ -331,17 +343,30 @@ switch ID
         
         close all
         
-        cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
+        if strcmp(hostname,'JAT-PC')
+            
+            cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
+            
+        else
+            
+            cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\DATA')
+            
+        end
         
         %         g1 = OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1);
         g2 = OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 2);
+        g1 = OBallSTATS.PD{2}.data(OBallSTATS.PD{2}.group == 1);
         %         ga1 = abs(g1);
         ga2 = abs(g2);
+        ga1 = abs(g1);
         t = readtable('ob_subj_data.csv');
+        obb = readtable('obBehv.csv');
         tPD = t(ismember(t.cond,'PD'),:);
         tPDg2 = tPD(tPD.groupN == 2,:);
+        tPDg1 = tPD(tPD.groupN == 1,:);
         %         tPDg1 = tPD(tPD.groupN == 1,:);
         stD = tPDg2.stimdur;
+        stD1 = tPDg1.stimdur;
         %         nstD = tPDg1.stimdur;
         
         %         figure;
@@ -379,12 +404,20 @@ switch ID
         xT = get(gca,'XTick');
         xT2 = xT(3);
         
-
+        
         text(xT2 + 200,yT - 2,sprintf('p = %0.2f',pval2),'Color','k')
         text(xT2 + 200,yT - 5,sprintf('r = %0.2f',rho1),'Color','k')
-
         
-        cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+        
+        if strcmp(hostname,'JAT-PC')
+            
+            cd('E:\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+            
+        else
+            
+            cd('C:\Users\johna\Dropbox\Publications_Meta\InProgress\Yilma_OB_DBS\images\NewFigs08032017')
+            
+        end
         
         fname = 'Figure3_OB_Corr.pdf';
         
@@ -393,8 +426,97 @@ switch ID
         saveas(gcf, fname)
         close all
         
+        plot(obb.stimbetw,obb.UPSIT,'ko')
+        [rho_vu , pval_vu] = corr(obb.stimbetw,obb.UPSIT);
+        
+        coef_fit_vu = polyfit(obb.stimbetw,obb.UPSIT,1);
+        y_fit_vu = polyval(coef_fit_vu,obb.stimbetw);
+        hold on
+        line([min(obb.stimbetw) max(obb.stimbetw)], [y_fit_vu(length(y_fit_vu)) y_fit_vu(1)],'Color','k','LineWidth',2.5)
+        
+        xVals1 = get(gca,'XTick');
+        yVals1 = get(gca,'YTick');
+        xticks(linspace(min(xVals1),max(xVals1),3))
+        yticks(linspace(min(yVals1),max(yVals1),3))
+        
+        ylabel('Pre/Post stimulation change in UPSIT')
+        xlabel('Duration of stimulation before test (days)')
+        axis square
+        title(sprintf('p = %0.2f r = %0.2f',rho_vu , pval_vu))
+        
+        obbInd2 = ismember(tPDg2.f_surg_n,obb.first);
+        obbTab2 = tPDg2(obbInd2,:);
+        obbTab2.OBvol = g2(obbInd2);
+        obbBind2 = ismember(obb.first,obbTab2.f_surg_n);
+        obbTab2.Upsit = obb.UPSIT(obbBind2);
+        obbTab2.stimB = obb.stimbetw(obbBind2);
+        
+        obbInd1 = ismember(tPDg1.f_surg_n,obb.first);
+        obbTab1 = tPDg1(obbInd1,:);
+        obbTab1.OBvol = g1(obbInd1);
+        obbBind1 = ismember(obb.first,obbTab1.f_surg_n);
+        obbTab1.Upsit = obb.UPSIT(obbBind1);
+        obbTab1.stimB = obb.stimbetw(obbBind1);
+        
+        figure;
+        %         nstimB = (obbTab.stimB - min(obbTab.stimB)) ./ (max(obbTab.stimB) - min(obbTab.stimB));
+        %         nOBvol = (obbTab.OBvol - min(obbTab.OBvol)) ./ (max(obbTab.OBvol) - min(obbTab.OBvol));
+%         subplot(1,2,1)
+%         plot(obbTab.stimB,obbTab.Upsit,'bo')
+%         [rho_su , pval_su] = corr(obbTab.stimB,obbTab.Upsit);
+%         
+%         coef_fit_su = polyfit(obbTab.stimB,obbTab.Upsit,1);
+%         y_fit_su = polyval(coef_fit_su,obbTab.stimB);
+%         hold on
+%         line([min(obbTab.stimB) max(obbTab.stimB)], [y_fit_su(length(y_fit_su)) y_fit_su(1)],'Color','b','LineWidth',2.5)
+%         
+%         title(sprintf('r = %0.2f , p = %0.2f',rho_su,pval_su))
+        
+%         xticks(linspace(min(obbTab.stimB),max(obbTab.stimB),5))
+%         xlim([min(obbTab.stimB) max(obbTab.stimB)])
+%         
+%         ylabel('Change in UPSIT Pre/Post DBS')
+%         xlabel('Duration of stimulation')
+        
+%         subplot(1,2,2)
+% 
+%         OBdat = [obbTab1.OBvol ; obbTab2.OBvol];
+%         
+%         OBgr = [repmat(1,size(obbTab1.OBvol)) ; repmat(2,size(obbTab2.OBvol))]
+%         
+%         boxplot(OBdat,OBgr);
+%         [a,b,c] = ranksum(obbTab1.OBvol , obbTab2.OBvol);
+        
+        figure;
+
+        plot(obbTab2.OBvol,obbTab2.Upsit,'ro')
+        [rho_vu , pval_vu] = corr(obbTab2.OBvol,obbTab2.Upsit);
+        
+        coef_fit_vu = polyfit(obbTab2.OBvol,obbTab2.Upsit,1);
+        y_fit_vu = polyval(coef_fit_vu,obbTab2.OBvol);
+        hold on
+        line([min(obbTab2.OBvol) max(obbTab2.OBvol)], [y_fit_vu(length(y_fit_vu)) y_fit_vu(1)],'Color','r','LineWidth',2.5)
         
         
+        plot(obbTab1.OBvol,obbTab1.Upsit,'bo')
+        [rho_vu1 , pval_vu1] = corr(obbTab1.OBvol,obbTab1.Upsit);
+        
+        coef_fit_vu1 = polyfit(obbTab1.OBvol,obbTab1.Upsit,1);
+        y_fit_vu1 = polyval(coef_fit_vu1,obbTab1.OBvol);
+        hold on
+        line([min(obbTab1.OBvol) max(obbTab1.OBvol)], [y_fit_vu1(length(y_fit_vu1)) y_fit_vu1(1)],'Color','b','LineWidth',2.5)
+        
+        
+        
+        title(sprintf('r = %0.2f , p = %0.2f',rho_vu,pval_vu))
+        
+        xticks(round(linspace(3,max(obbTab2.OBvol),5)))
+        xlim([3 max(obbTab2.OBvol)])
+        
+        xlabel('Change in OB volume post stimulation')
+        ylabel('Change in UPSIT Pre/Post DBS')
+        
+        axis square
 end
 
 

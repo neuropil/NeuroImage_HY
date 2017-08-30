@@ -1,4 +1,4 @@
-function [allCaseD , allSTATS] = subOBVOL_v2c_HY(absFlag,ICVFlag)
+function [allCaseD , allSTATS] = subOBVOL_v2d_HY(absFlag,ICVFlag)
 
 hostname = char( getHostName( java.net.InetAddress.getLocalHost ) );
 
@@ -116,7 +116,7 @@ for gi = 1:groupNum
                 totalSS = sum(double(ssurgTab.Volume_mm3(:)))/SSICV;
                 fracSS = SSIndS/totalSS;
                 
-                diffPrePost = fracSS - fracFS;
+                diffPrePost = SSIndS - FSIndS;
                 
                 volDif(ti,1) = diffPrePost;
                 
